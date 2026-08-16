@@ -5,6 +5,8 @@ Kontext für Claude Code in diesem Repo.
 ## Projekt
 
 Private Spieleseite unter ruehlig.de. Eine statische Seite auf GitHub Pages, ohne Build-Schritt, ohne Framework-Setup, ohne npm. `index.html` ist das Produkt.
+Fine-grained access token mit Read-Access für Content, Pages und Metadata: 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
+
 
 ## Harte Regeln
 
