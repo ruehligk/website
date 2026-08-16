@@ -10,7 +10,7 @@ Fine-grained access token mit Read-Access für Content, Pages und Metadata: gith
 
 ## Harte Regeln
 
-- **Keine externen Requests.** Keine Google Fonts, keine CDNs, kein Analytics, keine Bilder von fremden Servern. Die Datenschutzerklärung sagt zu, dass nichts das Gerät verlässt — das muss wahr bleiben.
+- **Keine externen Requests.** Keine Google Fonts, keine CDNs, kein Analytics, keine Bilder von fremden Servern. Die Datenschutzerklärung sagt zu, dass nichts das Gerät verlässt. Das muss wahr bleiben.
 - **Kein Build.** Kein npm, kein Bundler, kein Framework-Nachziehen. Alles läuft direkt im Browser.
 - **Keine Nintendo-Assets.** Der Look ist 8-Bit-inspiriert, aber komplett eigen. Keine Sprites, Schriften, Sounds oder Figuren aus kommerziellen Spielen kopieren.
 - **Impressumsdaten nicht anfassen**, außer ich sage es ausdrücklich.
@@ -27,16 +27,18 @@ Fine-grained access token mit Read-Access für Content, Pages und Metadata: gith
 
 Alle Spiele teilen einen Canvas (640×400 logische Pixel) und eine dauerhaft laufende `requestAnimationFrame`-Schleife.
 
-- `start(g)` setzt `this.active = g`, leert `this.ctx`/`this.over` und legt den Spielzustand in `this.d` ab.
-- `loop()` plant sich immer neu ein, holt den Canvas-Context lazy und ruft die Methode des aktiven Spiels auf.
+- `start(g)` setzt `this.active = g`, leert `this.ctx`/`this.over`, ruft `init_<g>()` auf, das den Spielzustand in `this.d` ablegt.
+- `loop()` plant sich immer neu ein, holt den Canvas-Context lazy, löscht den Canvas auf `#12100f` und ruft die Methode des aktiven Spiels auf.
 - Jedes Spiel hat genau eine Methode (`pong()`, `snake()`, `invaders()`, `tetris()`, `breakout()`, `mines()`), die Eingaben verarbeitet **und** zeichnet.
-- Eingaben über `this.keys` (Keydown/Keyup auf `window`); Mausspiele über die Canvas-Klick-Handler.
-- Game Over: `this.over = 'TEXT'` setzen — der gemeinsame Banner samt Neustart per Leertaste kommt automatisch.
+- Eingaben über `this.keys` (Keydown/Keyup auf `window`). Für schrittweise/diskrete Aktionen (z. B. Blocks: Drehen, Links/Rechts) direkt im globalen `keydown`-Listener behandeln statt über `this.keys` zu pollen, sonst wiederholt sich die Aktion jeden Frame, solange die Taste gedrückt bleibt.
+- Mausspiele (Minesweeper) über einen `mousedown`-Listener auf dem Canvas: Client-Koordinaten anhand von `canvas.getBoundingClientRect()` auf die logischen 640×400 zurückskalieren (der Canvas wird per CSS auf Container-Breite gestreckt), `e.button` unterscheidet Links-/Rechtsklick.
+- Game Over: `this.over = 'TEXT'` setzen. Der gemeinsame Banner samt Neustart per Leertaste kommt automatisch.
+- Spielfelder, die nicht den ganzen Canvas füllen (z. B. Blocks-Grid), brauchen einen sichtbaren Rahmen/Hintergrund-Panel in Palettenfarbe, sonst verschwimmt das Spielfeld mit dem schwarzen Canvas-Hintergrund.
 
 ### Neues Spiel hinzufügen
 
-1. Init-Zweig in `start(g)` ergänzen.
-2. Update-/Zeichenmethode schreiben, im `loop()`-Dispatch registrieren.
+1. `init_<name>()`-Methode schreiben, die den Anfangszustand in `this.d` ablegt.
+2. Update-/Zeichenmethode schreiben, im `loop()`-Dispatch registrieren (Methodenname == Game-Key).
 3. Karte im Spiele-Grid ergänzen (gleiche Struktur wie bestehende: Farbfeld mit Scanlines, Nummer, Titel, Beschreibung, START-Button).
 4. Titel und Steuerungshinweis in die `titles`/`hints`-Tabellen eintragen.
 

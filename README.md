@@ -1,6 +1,6 @@
 # ruehlig.de
 
-Private Spielesammlung unter [ruehlig.de](https://ruehlig.de) — sechs Browser-Klassiker in einer einzigen statischen HTML-Datei, gehostet auf GitHub Pages.
+Private Spielesammlung unter [ruehlig.de](https://ruehlig.de): sechs Browser-Klassiker in einer einzigen statischen HTML-Datei, gehostet auf GitHub Pages.
 
 ## Was drin ist
 
@@ -17,12 +17,12 @@ Private Spielesammlung unter [ruehlig.de](https://ruehlig.de) — sechs Browser-
 
 ## Aufbau
 
-- `index.html` — die komplette Seite: Layout, Texte, alle sechs Spiel-Engines, Impressum und Datenschutz. Keine externen Requests (keine Fonts, kein CDN, kein Tracking), kein Build-Schritt.
+- `index.html` ist die komplette Seite: Layout, Texte, alle sechs Spiel-Engines, Impressum und Datenschutz. Keine externen Requests (keine Fonts, kein CDN, kein Tracking), kein Build-Schritt.
 - Alle Spiele laufen auf einem gemeinsamen 640×400-Canvas mit einer zentralen `requestAnimationFrame`-Schleife; pro Spiel gibt es eine Update-/Zeichenmethode.
 
 ## Lokal ansehen
 
-Datei im Browser öffnen — oder:
+Datei im Browser öffnen, oder:
 
 ```bash
 python3 -m http.server 8000
@@ -30,11 +30,11 @@ python3 -m http.server 8000
 
 ## Deployment
 
-Push auf `main` → GitHub Pages (Settings → Pages, Branch `main`, Ordner `/`). Custom Domain `ruehlig.de`, „Enforce HTTPS" aktiv.
+Push auf `main` löst das Deployment über GitHub Pages aus (Settings > Pages, Branch `main`, Ordner `/`). Custom Domain `ruehlig.de`, „Enforce HTTPS" aktiv.
 
 ## Rechtliches
 
-Impressum und Datenschutzerklärung sind als Overlays im Footer verlinkt. Verantwortlich: Kai Rühlig, Anton-Fils-Str. 6, 67227 Frankenthal — Kontakt: website@ruehlig.de
+Impressum und Datenschutzerklärung sind als Overlays im Footer verlinkt. Verantwortlich: Kai Rühlig, Anton-Fils-Str. 6, 67227 Frankenthal. Kontakt: website@ruehlig.de
 
 ## Lizenz
 

@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ruehlig.de — Spielhalle</title>
+  <title>Spielhalle | ruehlig.de</title>
   <style>
     :root {
       --paper: #f6efe2;
@@ -310,7 +310,7 @@
   <header>
     <div class="kicker mono">Ruehlig.de</div>
     <h1 class="mono">Spielhalle</h1>
-    <p>Sechs Klassiker, ein Canvas, keine Downloads. Alles läuft direkt hier im Browser — nichts wird geladen, nichts
+    <p>Sechs Klassiker, ein Canvas, keine Downloads. Alles läuft direkt hier im Browser. Nichts wird geladen, nichts
       wird gespeichert, nichts verlässt dieses Gerät.</p>
   </header>
 
@@ -321,7 +321,7 @@
         <div class="swatch red"><span class="num">01</span></div>
         <div class="card-body">
           <h2>Space Invaders</h2>
-          <p>Verteidige die letzte Reihe. Die Aliens werden nicht müde — du hoffentlich auch nicht.</p>
+          <p>Verteidige die letzte Reihe. Die Aliens werden nicht müde, du hoffentlich auch nicht.</p>
           <button class="start-btn" data-game="invaders">Start</button>
         </div>
       </article>
@@ -708,7 +708,9 @@
           d.enemies.forEach(function (e) { if (e.alive) self2.rect(e.x, e.y, e.w, e.h, rowColors[e.row % rowColors.length]); });
           d.bullets.forEach(function (b) { self2.rect(b.x, b.y, 4, 8, COLORS.paper); });
           d.enemyBullets.forEach(function (b) { self2.rect(b.x, b.y, 4, 8, COLORS.red); });
-          this.rect(d.px, d.py, d.pw, d.ph, COLORS.green);
+          this.rect(d.px + d.pw / 2 - 4, d.py, 8, 4, COLORS.green);
+          this.rect(d.px + 10, d.py + 4, d.pw - 20, 4, COLORS.green);
+          this.rect(d.px, d.py + 8, d.pw, 6, COLORS.green);
           this.text("Score " + d.score, 10, 22, { size: 16 });
         },
 
@@ -774,11 +776,12 @@
 
         /* ---------- BLOCKS (TETRIS) ---------- */
         init_tetris: function () {
-          var cols = 10, rows = 20, cell = 20;
+          var cols = 10, rows = 20, cell = 18;
           var board = [];
           for (var y = 0; y < rows; y++) board.push(new Array(cols).fill(null));
           this.d = {
             cols: cols, rows: rows, cell: cell,
+            offX: 50, offY: 20,
             board: board, frame: 0, dropSpeed: 30,
             score: 0, lines: 0,
             piece: null, pieceName: null, px: 0, py: 0
@@ -848,20 +851,27 @@
             }
           }
 
+          var bx = d.offX, by = d.offY, bw = d.cols * d.cell, bh = d.rows * d.cell;
+
+          this.rect(bx - 3, by - 3, bw + 6, bh + 6, COLORS.paper);
+          this.rect(bx, by, bw, bh, COLORS.ink);
+          for (var gx = 1; gx < d.cols; gx++) this.rect(bx + gx * d.cell, by, 1, bh, "rgba(246,239,226,0.08)");
+          for (var gy = 1; gy < d.rows; gy++) this.rect(bx, by + gy * d.cell, bw, 1, "rgba(246,239,226,0.08)");
+
           for (var y = 0; y < d.rows; y++) {
             for (var x = 0; x < d.cols; x++) {
-              if (d.board[y][x]) this.rect(x * d.cell, y * d.cell, d.cell - 1, d.cell - 1, d.board[y][x]);
+              if (d.board[y][x]) this.rect(bx + x * d.cell, by + y * d.cell, d.cell - 1, d.cell - 1, d.board[y][x]);
             }
           }
           if (d.piece) {
             for (var r = 0; r < d.piece.length; r++) {
               for (var c = 0; c < d.piece[r].length; c++) {
-                if (d.piece[r][c]) this.rect((d.px + c) * d.cell, (d.py + r) * d.cell, d.cell - 1, d.cell - 1, PIECE_COLOR[d.pieceName]);
+                if (d.piece[r][c]) this.rect(bx + (d.px + c) * d.cell, by + (d.py + r) * d.cell, d.cell - 1, d.cell - 1, PIECE_COLOR[d.pieceName]);
               }
             }
           }
-          this.text("Score " + d.score, d.cols * d.cell + 24, 30, { size: 16 });
-          this.text("Reihen " + d.lines, d.cols * d.cell + 24, 54, { size: 16 });
+          this.text("Score " + d.score, bx + bw + 24, by + 20, { size: 16 });
+          this.text("Reihen " + d.lines, bx + bw + 24, by + 44, { size: 16 });
         },
 
         /* ---------- MINESWEEPER ---------- */
@@ -1005,8 +1015,8 @@
           "<p>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV: Kai Rühlig (Anschrift wie oben)</p>",
         datenschutz:
           '<h3 class="mono">Datenschutz</h3>' +
-          "<p>Diese Seite lädt keine externen Ressourcen — keine Schriften, kein CDN, kein Tracking, keine Analyse-Tools. Es werden keine Cookies gesetzt und keine Formulardaten erhoben. Alle Spiele laufen vollständig lokal im Browser; gespeichert wird nichts.</p>" +
-          "<p>Hosting: Diese Seite wird über GitHub Pages (GitHub, Inc., 88 Colin P Kelly Jr St, San Francisco, CA 94107, USA) ausgeliefert. Beim Aufruf verarbeitet GitHub automatisch technische Zugriffsdaten (u. a. IP-Adresse) in Server-Logs, um die Seite auszuliefern — das liegt außerhalb unserer Kontrolle.</p>" +
+          "<p>Diese Seite lädt keine externen Ressourcen: keine Schriften, kein CDN, kein Tracking, keine Analyse-Tools. Es werden keine Cookies gesetzt und keine Formulardaten erhoben. Alle Spiele laufen vollständig lokal im Browser; gespeichert wird nichts.</p>" +
+          "<p>Hosting: Diese Seite wird über GitHub Pages (GitHub, Inc., 88 Colin P Kelly Jr St, San Francisco, CA 94107, USA) ausgeliefert. Beim Aufruf verarbeitet GitHub automatisch technische Zugriffsdaten (u. a. IP-Adresse) in Server-Logs, um die Seite auszuliefern. Das liegt außerhalb unserer Kontrolle.</p>" +
           "<p>Eine darüber hinausgehende Datenverarbeitung findet nicht statt.</p>"
       };
       document.getElementById("impressum-btn").addEventListener("click", function () {
