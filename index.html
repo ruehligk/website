@@ -783,15 +783,17 @@
             cols: cols, rows: rows, cell: cell,
             offX: 50, offY: 20,
             board: board, frame: 0, dropSpeed: 30,
-            score: 0, lines: 0,
-            piece: null, pieceName: null, px: 0, py: 0
+            score: 0, lines: 0, age: 0, level: 1,
+            piece: null, pieceName: null, nextName: null, px: 0, py: 0
           };
           this.spawnPiece();
         },
         spawnPiece: function () {
           var d = this.d;
           var names = ["I", "O", "T", "S", "Z", "J", "L"];
-          var name = names[Math.floor(Math.random() * names.length)];
+          if (!d.nextName) d.nextName = names[Math.floor(Math.random() * names.length)];
+          var name = d.nextName;
+          d.nextName = names[Math.floor(Math.random() * names.length)];
           d.piece = PIECES[name].map(function (row) { return row.slice(); });
           d.pieceName = name;
           d.px = Math.floor((d.cols - d.piece[0].length) / 2);
@@ -837,12 +839,15 @@
               y++;
             }
           }
-          d.dropSpeed = Math.max(8, 30 - Math.floor(d.lines / 5) * 2);
           this.spawnPiece();
         },
         tetris: function () {
           var d = this.d;
           if (!this.over) {
+            d.age++;
+            d.level = 1 + Math.floor(d.lines / 5) + Math.floor(d.age / 1200);
+            d.dropSpeed = Math.max(6, 30 - (d.level - 1) * 2);
+
             d.frame++;
             var speed = this.keys.ArrowDown ? 4 : d.dropSpeed;
             if (d.frame >= speed) {
@@ -872,6 +877,22 @@
           }
           this.text("Score " + d.score, bx + bw + 24, by + 20, { size: 16 });
           this.text("Reihen " + d.lines, bx + bw + 24, by + 44, { size: 16 });
+          this.text("Level " + d.level, bx + bw + 24, by + 68, { size: 16 });
+
+          this.text("Nächster Block", bx + bw + 24, by + 104, { size: 13, color: COLORS.gray });
+          var nx = bx + bw + 24, ny = by + 116, nw = 90, nh = 90, npc = 16;
+          this.rect(nx - 3, ny - 3, nw + 6, nh + 6, COLORS.paper);
+          this.rect(nx, ny, nw, nh, COLORS.ink);
+          if (d.nextName) {
+            var np = PIECES[d.nextName];
+            var npw = np[0].length * npc, nph = np.length * npc;
+            var npx = nx + (nw - npw) / 2, npy = ny + (nh - nph) / 2;
+            for (var nr = 0; nr < np.length; nr++) {
+              for (var nc = 0; nc < np[nr].length; nc++) {
+                if (np[nr][nc]) this.rect(npx + nc * npc, npy + nr * npc, npc - 1, npc - 1, PIECE_COLOR[d.nextName]);
+              }
+            }
+          }
         },
 
         /* ---------- MINESWEEPER ---------- */
