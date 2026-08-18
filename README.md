@@ -34,7 +34,7 @@ Push auf `main` löst das Deployment über GitHub Pages aus (Settings > Pages, B
 
 ## Rechtliches
 
-Impressum und Datenschutzerklärung sind als Overlays im Footer verlinkt. Verantwortlich: Kai Rühlig, Anton-Fils-Str. 6, 67227 Frankenthal. Kontakt: website@ruehlig.de
+Impressum und Datenschutzerklärung sind als Overlays im Footer verlinkt. 
 
 ## Lizenz
 
